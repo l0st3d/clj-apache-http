@@ -30,7 +30,8 @@
       HttpGet HttpPost HttpPut HttpDelete HttpHead)
     (org.apache.http.protocol
       BasicHttpContext
-      HttpContext)
+      HttpContext
+      HTTP)
     (org.apache.http.client
       CookieStore
       CredentialsProvider
@@ -491,7 +492,8 @@ If only a query parameter map is provided, it is included in the body.")
                   ~'as ~'headers-as
                   ~'cookie-store
                   ~'filters
-                  ~'connection-manager]}
+                  ~'connection-manager
+		  ~'parameter-encoding]}
           (apply hash-map rest#)]
       (let [http-verb# (new ~class (resolve-uri uri-parts# (when ~'body ~'query)))]
         (if ~'body
@@ -499,7 +501,8 @@ If only a query parameter map is provided, it is included in the body.")
           (when ~'query
             (.setEntity http-verb#
                         (new UrlEncodedFormEntity
-                             (seq (map->name-value-pairs ~'query))))))
+                             (seq (map->name-value-pairs ~'query))
+			     (or ~'parameter-encoding HTTP/DEFAULT_CONTENT_CHARSET)))))
         (handle-http
           ~'parameters
           (adding-headers!
