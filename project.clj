@@ -1,4 +1,4 @@
-(defproject l0st3d/clj-apache-http "2.3.3"
+(defproject l0st3d/clj-apache-http "2.3.4"
  :description "Clojure HTTP library using the Apache HttpClient."
  :dev-dependencies [[leiningen/lein-swank "1.1.0"]]
  :dependencies [[org.clojure/clojure "1.2.0"]
