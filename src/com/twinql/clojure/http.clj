@@ -394,17 +394,19 @@
            #^StatusLine   status-line   (.getStatusLine http-response)
            #^HttpEntity   entity        (.getEntity http-response)
 
-           response {:code (.getStatusCode status-line)
-                     :reason (.getReasonPhrase status-line)
-                     :content
-                     (entity-as entity as (.getStatusCode status-line))
-                     
-                     :entity entity
-                     :client http-client
-                     :response http-response
-                     :headers (headers-as
-                               (.headerIterator http-response)
-                               h-as)}]
+           response (try
+		      {:code (.getStatusCode status-line)
+		       :reason (.getReasonPhrase status-line)
+		       :content
+		       (entity-as entity as (.getStatusCode status-line))
+		       :entity entity
+		       :client http-client
+		       :response http-response
+		       :headers (headers-as
+				 (.headerIterator http-response)
+				 h-as)}
+		      (catch Exception e
+			(Exception. (str "Error with response : " (entity-as entity :string (.getStatusCode status-line))) e)))]
 
        ;; I don't know if it's actually a good thing to do this.
        ;; (.. http-client getConnectionManager closeExpiredConnections)
